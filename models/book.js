@@ -6,22 +6,30 @@ const BookSchema = new Schema(
     name: {
       type: String,
     },
-    genre: {
+    slug: {
+      type: String,
+      lowercase: true,
+    },
+    genreId: {
       type: String,
     },
     image: {
       type: String,
-      default: 'https://daihoctantrao.edu.vn/media/news/s%C3%A1ch.jpg',
+      default: 'https://i.imgur.com/NVRNzyf.jpg',
+    },
+    price: {
+      type: Number,
     },
     des: {
       type: String,
     },
+    quantity: {
+      type: Number,
+      default: 0,
+    },
     authorId: {
       type: String,
     },
-    field: {
-      type: String
-    }
   },
   {
     collection: "books",

@@ -1,26 +1,25 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const AuthorSchema = new Schema(
+const CommentSchema = new Schema(
   {
-    name: {
+    email: {
       type: String,
     },
-    slug: {
-      type: String,
-      lowercase: true,
-    },
-    address: {
+    bookId: {
       type: String,
     },
-    age: {
+    content: {
+      type: String,
+    },
+    icon: {
       type: Number,
     },
   },
   {
-    collection: "authors",
+    collection: "comments",
     timestamps: true,
   }
 );
 
-module.exports = mongoose.model("authors", AuthorSchema);
+module.exports = mongoose.model("comments", CommentSchema);

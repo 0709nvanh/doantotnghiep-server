@@ -3,7 +3,7 @@ import { ApolloServer} from 'apollo-server-express';
 import cors from 'cors';
 import morgan from 'morgan'
 // load schema & resolvers
-
+import 'reflect-metadata'
 import typeDefs from './schema/schema';
 import resolvers from './resolver/resolver';
 
@@ -37,7 +37,7 @@ async function startServer() {
 startServer();
 
 
-const port = process.env.POST || 8866;
+const port = 9000;
 
 app.listen({port}, () => {
     console.log(`Server listening on http://localhost:${port}${server.graphqlPath}`)

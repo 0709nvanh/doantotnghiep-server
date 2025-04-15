@@ -9,24 +9,17 @@ const UserSchema = new Schema(
     password: {
       type: String,
     },
-    age: {
-      type: Number,
-    },
-    avatar: {
-      type: String,
-      default:
-        "https://w1.pngwing.com/pngs/386/684/png-transparent-face-icon-user-icon-design-user-profile-share-icon-avatar-black-and-white-silhouette.png",
-    },
-    address: {
-      type: String,
-    },
-    phone: {
-      type: String,
-    },
     email: {
       type: String,
     },
-    field: [{ name: { type: String }, value: { type: String } }],
+    avatar: {
+      type: String,
+      default: 'https://cdn-icons-png.flaticon.com/512/219/219983.png'
+    },
+    role: {
+      type: Number,
+      default: 0,
+    }
   },
   {
     collection: "users",

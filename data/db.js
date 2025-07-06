@@ -7,123 +7,134 @@ const Genre = require("../models/genre");
 var nodemailer = require("nodemailer");
 const Comment = require("../models/comment");
 const mongooseDataMethods = {
-  getAllBooks: async () => {
-    return await Book.find();
-  }, //get all books
-  getBookById: async (id) => await Book.findById(id), // get a book by slug
-  getGenreById: async (id) => await Genre.findById(id), // get a genre by slug
-  getBookBySlug: async (slug) => await Book.findOne({ slug: slug }), // get a book by slug
-  getAllGenres: async () => await Genre.find(), //get all genres
-  getGenreBySlug: async (slug) => await Genre.findOne({ slug: slug }), // get a book by slug
-  createGenre: async (args) => {
-    // create a new book
-    const newGenre = new Genre(args.input);
-    newGenre.slug = slugify(newGenre.name);
-    return await newGenre.save();
-  },
-  updateCommentStatus: async ({ id, icon }) => {
-    const CommentUpdateConditions = { _id: id };
-    return await Comment.findOneAndUpdate(
-      CommentUpdateConditions,
-      { icon },
-      {
-        new: true,
-      }
-    );
-  },
-  deleteComment: async (args) => {
-    const BookUpdateConditions = { _id: args.id };
-    return await Comment.findOneAndDelete(BookUpdateConditions);
-  },
-  createBook: async (args) => {
-    // create a new book
-    const newBook = new Book(args.input);
-    newBook.slug = slugify(newBook.name);
-    return await newBook.save();
-  },
-  updateBook: async (args) => {
-    // update a book
-    const BookUpdateConditions = { _id: args.id };
-    console.log(args);
-    args.input.slug = slugify(args.input.name);
-    return await Book.findOneAndUpdate(BookUpdateConditions, args.input, {
-      new: true,
-    });
-  },
-  updateQuantityBook: async (args) => {
-    // update a book
-    const BookUpdateConditions = { _id: args.id };
-    const m = args.input.count;
-    console.log('sadsa', m);
-    return await Book.findOneAndUpdate(
-      BookUpdateConditions,
-      { quantity: args.input.count },
-      );
-  },
-  deleteBook: async (args) => {
-    // delete a book
-    console.log(args);
-    const BookUpdateConditions = { _id: args.id };
-    return await Book.findOneAndDelete(BookUpdateConditions);
-  },
-  getAllAuthors: async () => await Author.find(), //get all authors
-  getAuthorBySlug: async (slug) => await Author.findOne({ slug: slug }), //get a author by id
-  getAuthorById: async (id) => await Author.findById(id), //get a author by id
-  createAuthor: async (args) => {
-    // create a new author
-    const newAuthor = new Author(args.input);
-    newAuthor.slug = slugify(newAuthor.name);
-    await newAuthor.save();
-    return newAuthor;
-  },
-  deleteAuthor: async (args) => {
-    const BookUpdateConditions = { _id: args.id };
-    await Book.deleteMany({authorId: args.id});
-    return await Author.findOneAndDelete(BookUpdateConditions);
-  },
-  deleteGenre: async (args) => {
-    const BookUpdateConditions = { _id: args.id };
-    await Book.deleteMany({genreId: args.id});
-    return await Genre.findOneAndDelete(BookUpdateConditions);
-  },
-  updateAuthor: async (args) => {
-    const BookUpdateConditions = { _id: args.id };
-    args.input.slug = slugify(args.input.name);
-    return await Author.findOneAndUpdate(BookUpdateConditions, args.input, {
-      new: true,
-    });
-  },
-  getUserByEmail: async (email) => await User.findOne({ email: email }),
-  getUserByUserId: async (userId) => {
-    console.log(userId);
-    return await User.findById(userId);
-  },
-  getUsers: async () => await User.find(),
-  signUpUser: async (args) => {
-    const newUser = new User(args.input);
-    await newUser.save();
-    return newUser;
-  },
-  createOrder: async (args) => {
-    const order = new Order(args.input);
-    const listOrder = JSON.parse(order.listOrder);
-    let total = 0;
-    listOrder.forEach((item) => {
-      total += item.book.price * item.quantity;
-    });
-    var todayDate = new Date().toISOString().slice(0, 10);
-    var transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: "truongmanhdung04@gmail.com",
-        pass: "dung@0401",
-      },
-    });
-    var mailOptions = {
-      from: "tienphongcutin@gmail.com",
-      to: order.email,
-      subject: "Thông tin đơn hàng, vui lòng xác nhận đơn hàng của bạn",
-      html: `<!DOCTYPE html>
+	getAllBooks: async () => {
+		return await Book.find();
+	}, //get all books
+	getBookById: async (id) => await Book.findById(id), // get a book by slug
+	getGenreById: async (id) => await Genre.findById(id), // get a genre by slug
+	getBookBySlug: async (slug) => await Book.findOne({ slug: slug }), // get a book by slug
+	getAllGenres: async () => await Genre.find(), //get all genres
+	getGenreBySlug: async (slug) => await Genre.findOne({ slug: slug }), // get a book by slug
+	createGenre: async (args) => {
+		// create a new book
+		const newGenre = new Genre(args.input);
+		newGenre.slug = slugify(newGenre.name);
+		return await newGenre.save();
+	},
+	updateCommentStatus: async ({ id, icon }) => {
+		const CommentUpdateConditions = { _id: id };
+		return await Comment.findOneAndUpdate(
+			CommentUpdateConditions,
+			{ icon },
+			{
+				new: true,
+			},
+		);
+	},
+	deleteComment: async (args) => {
+		const BookUpdateConditions = { _id: args.id };
+		return await Comment.findOneAndDelete(BookUpdateConditions);
+	},
+	createBook: async (args) => {
+		// create a new book
+		const newBook = new Book(args.input);
+		newBook.slug = slugify(newBook.name);
+		return await newBook.save();
+	},
+	updateBook: async (args) => {
+		// update a book
+		const BookUpdateConditions = { _id: args.id };
+		console.log(args);
+		args.input.slug = slugify(args.input.name);
+		return await Book.findOneAndUpdate(BookUpdateConditions, args.input, {
+			new: true,
+		});
+	},
+	updateQuantityBook: async (args) => {
+		// update a book
+		const BookUpdateConditions = { _id: args.id };
+		const m = args.input.count;
+		console.log("sadsa", m);
+		return await Book.findOneAndUpdate(BookUpdateConditions, {
+			quantity: args.input.count,
+		});
+	},
+	deleteBook: async (args) => {
+		// delete a book
+		console.log(args);
+		const BookUpdateConditions = { _id: args.id };
+		return await Book.findOneAndDelete(BookUpdateConditions);
+	},
+	getAllAuthors: async () => await Author.find(), //get all authors
+	getAuthorBySlug: async (slug) => await Author.findOne({ slug: slug }), //get a author by id
+	getAuthorById: async (id) => await Author.findById(id), //get a author by id
+	createAuthor: async (args) => {
+		// create a new author
+		const newAuthor = new Author(args.input);
+		newAuthor.slug = slugify(newAuthor.name);
+		await newAuthor.save();
+		return newAuthor;
+	},
+	deleteAuthor: async (args) => {
+		const BookUpdateConditions = { _id: args.id };
+		await Book.deleteMany({ authorId: args.id });
+		return await Author.findOneAndDelete(BookUpdateConditions);
+	},
+	deleteGenre: async (args) => {
+		const BookUpdateConditions = { _id: args.id };
+		await Book.deleteMany({ genreId: args.id });
+		return await Genre.findOneAndDelete(BookUpdateConditions);
+	},
+	updateAuthor: async (args) => {
+		const BookUpdateConditions = { _id: args.id };
+		args.input.slug = slugify(args.input.name);
+		return await Author.findOneAndUpdate(BookUpdateConditions, args.input, {
+			new: true,
+		});
+	},
+	getUserByEmail: async (email) => await User.findOne({ email: email }),
+	getUserByUserId: async (userId) => {
+		console.log(userId);
+		return await User.findById(userId);
+	},
+	getUsers: async () => await User.find(),
+	signUpUser: async (args) => {
+		// Kiểm tra email đã tồn tại chưa
+		const existingUser = await User.findOne({ email: args.input.email });
+		if (existingUser) {
+			throw new Error("Email đã được sử dụng");
+		}
+
+		// Kiểm tra name đã tồn tại chưa
+		const existingName = await User.findOne({ name: args.input.name });
+		if (existingName) {
+			throw new Error("Tên người dùng đã được sử dụng");
+		}
+
+		const newUser = new User(args.input);
+		await newUser.save();
+		return newUser;
+	},
+	createOrder: async (args) => {
+		const order = new Order(args.input);
+		const listOrder = JSON.parse(order.listOrder);
+		let total = 0;
+		listOrder.forEach((item) => {
+			total += item.book.price * item.quantity;
+		});
+		var todayDate = new Date().toISOString().slice(0, 10);
+		var transporter = nodemailer.createTransport({
+			service: "gmail",
+			auth: {
+				user: "truongmanhdung04@gmail.com",
+				pass: "dung@0401",
+			},
+		});
+		var mailOptions = {
+			from: "tienphongcutin@gmail.com",
+			to: order.email,
+			subject: "Thông tin đơn hàng, vui lòng xác nhận đơn hàng của bạn",
+			html: `<!DOCTYPE html>
             <html lang="en">
               <head>
                 <meta charset="UTF-8" />
@@ -458,8 +469,8 @@ const mongooseDataMethods = {
                                                         box-sizing: border-box;
                                                       "
                                                       >Email: ${
-                                                        order.email
-                                                      }</span>
+																												order.email
+																											}</span>
                                                   </td>
                                                   
                                                 </tr>
@@ -485,8 +496,8 @@ const mongooseDataMethods = {
                                                         box-sizing: border-box;
                                                       "
                                                       >Số điện thoại: 0${
-                                                        order.phone
-                                                      }</span>
+																												order.phone
+																											}</span>
                                                   </td>
                                                   
                                                 </tr>
@@ -512,8 +523,8 @@ const mongooseDataMethods = {
                                                         box-sizing: border-box;
                                                       "
                                                       >Địa chỉ: ${
-                                                        order.address
-                                                      }</span>
+																												order.address
+																											}</span>
                                                   </td>
                                                   
                                                 </tr>
@@ -539,8 +550,8 @@ const mongooseDataMethods = {
                                                         box-sizing: border-box;
                                                       "
                                                       >Số lượng sản phẩm: ${
-                                                        listOrder.length
-                                                      }</span
+																												listOrder.length
+																											}</span
                                                     >
                                                   </td>
                                                 </tr>
@@ -591,12 +602,12 @@ const mongooseDataMethods = {
                                                         box-sizing: border-box;
                                                       "
                                                       >Tổng tiền: ${new Intl.NumberFormat(
-                                                        "de-DE",
-                                                        {
-                                                          style: "currency",
-                                                          currency: "VND",
-                                                        }
-                                                      ).format(total)}</span
+																												"de-DE",
+																												{
+																													style: "currency",
+																													currency: "VND",
+																												},
+																											).format(total)}</span
                                                     >
                                                   </td>
                                                 </tr>
@@ -1298,76 +1309,91 @@ const mongooseDataMethods = {
               </body>
             </html>
             `,
-    };
-    transporter.sendMail(mailOptions, async (error, info) => {
-      if (error) {
-        console.log(error);
-      } else {
-      }
-    });
-    await order.save();
-    return order;
-  },
-  getOrders: async ({ email }) => {
-    if (email) {
-      return await Order.find({ email: email });
-    } else {
-      return await Order.find();
-    }
-  },
-  getOrderById: async (id) => await Order.findById(id),
-  updateStatusOrder: async ({ id, status }) => {
-    const BookUpdateConditions = { _id: id };
-    return await Order.findOneAndUpdate(
-      BookUpdateConditions,
-      { status: status + 1 },
-      {
-        new: true,
-      }
-    );
-  },
-  deleteStatusOrder: async ({ id }) => {
-    const BookUpdateConditions = { _id: id };
-    return await Order.findOneAndUpdate(
-      BookUpdateConditions,
-      { status: 5 },
-      {
-        new: true,
-      }
-    );
-  },
-  danhGiaOrder: async ({ id, comments, danhgia }) => {
-    const BookUpdateConditions = { _id: id };
-    return await Order.findOneAndUpdate(
-      BookUpdateConditions,
-      { comments, danhgia },
-      {
-        new: true,
-      }
-    );
-  },
-  login: async ({ email, name }) => {
-    const user = await User.findOne({ email: email, name: name });
-    if (user) {
-      return user;
-    } else {
-      return false;
-    }
-  },
-  createComment: async (args) => {
-    const newAuthor = new Comment(args.input);
-    await newAuthor.save();
-    return newAuthor;
-  },
-  getComments: async ( bookId) => {
-    if (bookId) {
-      return await Comment.find({ bookId: bookId });
-    }
-  },
-  getAllComments: async () => {
-    return await Comment.find();
-  }
-  
+		};
+		transporter.sendMail(mailOptions, async (error, info) => {
+			if (error) {
+				console.log(error);
+			} else {
+			}
+		});
+		await order.save();
+		return order;
+	},
+	getOrders: async ({ email }) => {
+		if (email) {
+			return await Order.find({ email: email });
+		} else {
+			return await Order.find();
+		}
+	},
+	getOrderById: async (id) => await Order.findById(id),
+	updateStatusOrder: async ({ id, status }) => {
+		const BookUpdateConditions = { _id: id };
+		return await Order.findOneAndUpdate(
+			BookUpdateConditions,
+			{ status: status + 1 },
+			{
+				new: true,
+			},
+		);
+	},
+	deleteStatusOrder: async ({ id }) => {
+		const BookUpdateConditions = { _id: id };
+		return await Order.findOneAndUpdate(
+			BookUpdateConditions,
+			{ status: 5 },
+			{
+				new: true,
+			},
+		);
+	},
+	danhGiaOrder: async ({ id, comments, danhgia }) => {
+		const BookUpdateConditions = { _id: id };
+		return await Order.findOneAndUpdate(
+			BookUpdateConditions,
+			{ comments, danhgia },
+			{
+				new: true,
+			},
+		);
+	},
+	login: async ({ email, name }) => {
+		const user = await User.findOne({ email: email, name: name });
+		if (user) {
+			return user;
+		} else {
+			return false;
+		}
+	},
+	loginWithPassword: async ({ input }) => {
+		const { email, password } = input;
+
+		// Tìm user theo email
+		const user = await User.findOne({ email: email });
+		if (!user) {
+			throw new Error("Email không tồn tại");
+		}
+
+		// Kiểm tra password (hiện tại chưa mã hóa, sẽ cập nhật sau)
+		if (user.password !== password) {
+			throw new Error("Mật khẩu không đúng");
+		}
+
+		return user;
+	},
+	createComment: async (args) => {
+		const newAuthor = new Comment(args.input);
+		await newAuthor.save();
+		return newAuthor;
+	},
+	getComments: async (bookId) => {
+		if (bookId) {
+			return await Comment.find({ bookId: bookId });
+		}
+	},
+	getAllComments: async () => {
+		return await Comment.find();
+	},
 };
 
 module.exports = mongooseDataMethods;

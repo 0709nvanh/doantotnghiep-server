@@ -115,6 +115,12 @@ const mongooseDataMethods = {
 		await newUser.save();
 		return newUser;
 	},
+	updateUser: async (args) => {
+		const userUpdateConditions = { _id: args.id };
+		return await User.findOneAndUpdate(userUpdateConditions, args.input, {
+			new: true,
+		});
+	},
 	createOrder: async (args) => {
 		const order = new Order(args.input);
 		const listOrder = JSON.parse(order.listOrder);

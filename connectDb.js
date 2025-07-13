@@ -17,6 +17,7 @@
 //  }
  async function connect() {
   try {
+    //connect tới mongodb trên web
     await mongoose.connect("mongodb+srv://anhnv:dung0401@sky-book.ua98syz.mongodb.net/?appName=sky-book", {
       useNewUrlParser: true,
       useUnifiedTopology: true,

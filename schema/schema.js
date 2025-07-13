@@ -46,6 +46,7 @@ const typeDefs = gql`
 		name: String
 		email: String
 		password: String
+		phone: String
 		avatar: String
 		role: Int
 	}
@@ -53,6 +54,7 @@ const typeDefs = gql`
 		name: String
 		email: String
 		password: String
+		phone: String
 		avatar: String
 		role: Int
 	}
@@ -146,6 +148,7 @@ const typeDefs = gql`
 		login(email: String, name: String): User
 		loginWithPassword(input: LoginInput): User
 		createComment(input: CommentInput): Comment
+		updateUser(id: ID!, input: UserInput): User
 	}
 `;
 

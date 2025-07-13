@@ -22,6 +22,10 @@ const UserSchema = new Schema(
 			trim: true,
 			lowercase: true,
 		},
+		phone: {
+			type: String,
+			trim: true,
+		},
 		avatar: {
 			type: String,
 			default: "https://cdn-icons-png.flaticon.com/512/219/219983.png",

@@ -104,6 +104,9 @@ const resolvers = {
 		createUser: async (parent, args, { mongooseDataMethods }) => {
 			return await mongooseDataMethods.signUpUser(args);
 		},
+		updateUser: async (parent, args, { mongooseDataMethods }) => {
+			return await mongooseDataMethods.updateUser(args);
+		},
 		createOrder: async (parent, args, { mongooseDataMethods }) => {
 			return await mongooseDataMethods.createOrder(args);
 		},

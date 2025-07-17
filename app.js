@@ -9,7 +9,7 @@ import resolvers from "./resolver/resolver.js";
 
 // load db methods
 
-import mongooseDataMethods from "./data/db";
+import mongooseDataMethods from "./data/db.js";
 
 // connect mongose db
 require("dotenv").config();

@@ -4,6 +4,7 @@ import cors from "cors";
 import morgan from "morgan";
 // load schema & resolvers
 import "reflect-metadata";
+import dotenv from "dotenv";
 import typeDefs from "./schema/schema.js";
 import resolvers from "./resolver/resolver.js";
 
@@ -12,9 +13,7 @@ import resolvers from "./resolver/resolver.js";
 import mongooseDataMethods from "./data/db.js";
 
 // connect mongose db
-require("dotenv").config();
-
-const db = require("./connectDb");
+import db from "./connectDb.js";
 db.connect();
 const server = new ApolloServer({
 	typeDefs,

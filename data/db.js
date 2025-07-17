@@ -1,11 +1,12 @@
-const Book = require("../models/book");
-const Author = require("../models/author");
-const User = require("../models/user");
-const slugify = require("slugify");
-const Order = require("../models/order");
-const Genre = require("../models/genre");
-var nodemailer = require("nodemailer");
-const Comment = require("../models/comment");
+import Book from "../models/book.js";
+import Author from "../models/author.js";
+import User from "../models/user.js";
+import slugify from "slugify";
+import Order from "../models/order.js";
+import Genre from "../models/genre.js";
+import nodemailer from "nodemailer";
+import Comment from "../models/comment.js";
+
 const mongooseDataMethods = {
 	getAllBooks: async () => {
 		return await Book.find().sort({ createdAt: -1 });
@@ -1428,4 +1429,4 @@ const mongooseDataMethods = {
 	},
 };
 
-module.exports = mongooseDataMethods;
+export default mongooseDataMethods;

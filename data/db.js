@@ -8,12 +8,12 @@ var nodemailer = require("nodemailer");
 const Comment = require("../models/comment");
 const mongooseDataMethods = {
 	getAllBooks: async () => {
-		return await Book.find();
+		return await Book.find().sort({ createdAt: -1 });
 	}, //get all books
 	getBookById: async (id) => await Book.findById(id), // get a book by slug
 	getGenreById: async (id) => await Genre.findById(id), // get a genre by slug
 	getBookBySlug: async (slug) => await Book.findOne({ slug: slug }), // get a book by slug
-	getAllGenres: async () => await Genre.find(), //get all genres
+	getAllGenres: async () => await Genre.find().sort({ createdAt: -1 }), //get all genres
 	getGenreBySlug: async (slug) => await Genre.findOne({ slug: slug }), // get a book by slug
 	createGenre: async (args) => {
 		// create a new book
@@ -65,7 +65,7 @@ const mongooseDataMethods = {
 		const BookUpdateConditions = { _id: args.id };
 		return await Book.findOneAndDelete(BookUpdateConditions);
 	},
-	getAllAuthors: async () => await Author.find(), //get all authors
+	getAllAuthors: async () => await Author.find().sort({ createdAt: -1 }), //get all authors
 	getAuthorBySlug: async (slug) => await Author.findOne({ slug: slug }), //get a author by id
 	getAuthorById: async (id) => await Author.findById(id), //get a author by id
 	createAuthor: async (args) => {
@@ -97,7 +97,7 @@ const mongooseDataMethods = {
 		console.log(userId);
 		return await User.findById(userId);
 	},
-	getUsers: async () => await User.find(),
+	getUsers: async () => await User.find().sort({ createdAt: -1 }),
 	signUpUser: async (args) => {
 		// Kiểm tra email đã tồn tại chưa
 		const existingUser = await User.findOne({ email: args.input.email });
@@ -128,6 +128,14 @@ const mongooseDataMethods = {
 		listOrder.forEach((item) => {
 			total += item.book.price * item.quantity;
 		});
+
+		// // Kiểm tra số lượng sách trước khi trừ
+		// for (const item of listOrder) {
+		// 	const book = await Book.findById(item.book._id);
+		// 	if (!book || book.quantity < item.quantity) {
+		// 		throw new Error(`Số lượng sách không đủ cho: ${item.book.name}`);
+		// 	}
+		// }
 		var todayDate = new Date().toISOString().slice(0, 10);
 		var transporter = nodemailer.createTransport({
 			service: "gmail",
@@ -137,7 +145,7 @@ const mongooseDataMethods = {
 			},
 		});
 		var mailOptions = {
-			from: "tienphongcutin@gmail.com",
+			from: "vananh25070901@gmail.com",
 			to: order.email,
 			subject: "Thông tin đơn hàng, vui lòng xác nhận đơn hàng của bạn",
 			html: `<!DOCTYPE html>
@@ -1323,13 +1331,23 @@ const mongooseDataMethods = {
 			}
 		});
 		await order.save();
+
+		// // Giảm số lượng sách tương ứng
+		// for (const item of listOrder) {
+		// 	await Book.findByIdAndUpdate(
+		// 		item.book._id,
+		// 		{ $inc: { quantity: -item.quantity } },
+		// 		{ new: true }
+		// 	);
+		// }
+
 		return order;
 	},
 	getOrders: async ({ email }) => {
 		if (email) {
-			return await Order.find({ email: email });
+			return await Order.find({ email: email }).sort({ createdAt: -1 });
 		} else {
-			return await Order.find();
+			return await Order.find().sort({ createdAt: -1 });
 		}
 	},
 	getOrderById: async (id) => await Order.findById(id),
@@ -1394,11 +1412,11 @@ const mongooseDataMethods = {
 	},
 	getComments: async (bookId) => {
 		if (bookId) {
-			return await Comment.find({ bookId: bookId });
+			return await Comment.find({ bookId: bookId }).sort({ createdAt: -1 });
 		}
 	},
 	getAllComments: async () => {
-		return await Comment.find();
+		return await Comment.find().sort({ createdAt: -1 });
 	},
 };
 

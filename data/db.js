@@ -125,17 +125,24 @@ const mongooseDataMethods = {
 		const order = new Order(args.input);
 		const listOrder = JSON.parse(order.listOrder);
 		let total = 0;
-		listOrder.forEach((item) => {
+		// Kiểm tra số lượng sách trước khi trừ
+		for (const item of listOrder) {
+			const book = await Book.findById(item.book.id);
+			if (!book || book.quantity < item.quantity) {
+				throw new Error(`Số lượng sách không đủ cho: ${item.book.name}`);
+			}
 			total += item.book.price * item.quantity;
-		});
-
-		// // Kiểm tra số lượng sách trước khi trừ
-		// for (const item of listOrder) {
-		// 	const book = await Book.findById(item.book._id);
-		// 	if (!book || book.quantity < item.quantity) {
-		// 		throw new Error(`Số lượng sách không đủ cho: ${item.book.name}`);
-		// 	}
-		// }
+		}
+		// Lưu order
+		await order.save();
+		// Trừ số lượng sách tương ứng
+		for (const item of listOrder) {
+			await Book.findByIdAndUpdate(
+				item.book.id,
+				{ $inc: { quantity: -item.quantity } },
+				{ new: true },
+			);
+		}
 		var todayDate = new Date().toISOString().slice(0, 10);
 		var transporter = nodemailer.createTransport({
 			service: "gmail",
@@ -1330,17 +1337,6 @@ const mongooseDataMethods = {
 			} else {
 			}
 		});
-		await order.save();
-
-		// // Giảm số lượng sách tương ứng
-		// for (const item of listOrder) {
-		// 	await Book.findByIdAndUpdate(
-		// 		item.book._id,
-		// 		{ $inc: { quantity: -item.quantity } },
-		// 		{ new: true }
-		// 	);
-		// }
-
 		return order;
 	},
 	getOrders: async ({ email }) => {
@@ -1363,6 +1359,18 @@ const mongooseDataMethods = {
 	},
 	deleteStatusOrder: async ({ id }) => {
 		const BookUpdateConditions = { _id: id };
+		// Lấy order hiện tại
+		const order = await Order.findById(id);
+		if (order && order.listOrder) {
+			const listOrder = JSON.parse(order.listOrder);
+			for (const item of listOrder) {
+				await Book.findByIdAndUpdate(
+					item.book.id,
+					{ $inc: { quantity: item.quantity } },
+					{ new: true },
+				);
+			}
+		}
 		return await Order.findOneAndUpdate(
 			BookUpdateConditions,
 			{ status: 5 },

@@ -12,9 +12,9 @@ const GenreSchema = new Schema(
 		},
 	},
 	{
-		collection: "genres",
+		collection: "genre",
 		timestamps: true,
 	},
 );
 
-export default mongoose.model("genres", GenreSchema);
+export default mongoose.model("genre", GenreSchema);
